@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+
+
+  <title>GROCERY STORE BILLING</title>
+  
+  
+  <link rel='stylesheet' href='https://unpkg.com/bootstrap@5.1.0/dist/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css'>
+  
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div v-scope class="m-4">
+  <h3>GROCERY STORE BILLING</h3>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th width="200">Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+        <th width="110">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(entry, index) in entries" :key="entry">
+        <td class="align-middle">
+          <template v-if="entry.edit === false">{{ entry.name }}</template>
+          <template v-else>
+            <input type="text" class="form-control" v-model="entry.name">
+          </template>
+        </td>
+        <td class="align-middle">
+          <template v-if="entry.edit === false">{{ entry.quantity }}</template>
+          <template v-else>
+            <input type="number" class="form-control" v-model="entry.quantity">
+          </template>
+        </td>
+        <td class="align-middle">
+          <template v-if="entry.edit === false">{{ entry.price }}</template>
+          <template v-else>
+            <input type="number" class="form-control" v-model="entry.price">
+          </template>
+        </td>
+        <td class="align-middle" v-effect="entry.total = Number(entry.quantity) * Number(entry.price)">{{ entry.total.toFixed(2) }}</td>
+        <td>
+          <button v-if="entry.edit === false" type="button" class="btn btn-warning" @click="entry.edit = true">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button v-else type="button" class="btn btn-success" @click="entry.edit = false">
+            <i class="fa fa-save"></i>
+          </button>
+          <button type="button" class="btn btn-danger" @click="removeEntry(index)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td class="align-middle" colspan="3">Price Before Tax</td>
+        <td class="align-middle" v-effect="subtotal = (entries.length >= 1) ? entries.map(i => Number(i.total)).reduce((acc, val) => acc + val) : 0">
+          {{ subtotal.toFixed(2) }}
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="align-middle">Sales Tax</td>
+        <td colspan="2">
+          <select class="form-select" v-model="tax">
+            <option selected :value="0.00">Tax Free</option>
+          </select>
+        </td>
+        <td class="align-middle" v-effect="totalTax = Number(subtotal) * Number(tax)">
+          {{ totalTax.toFixed(2) }}
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="align-middle" colspan="3">Total Price</td>
+        <td class="align-middle" v-effect="totalPrice = Number(subtotal) + Number(totalTax)">
+          {{ totalPrice.toFixed(2) }}
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    <button type="button" class="btn btn-primary" @click="createEntry"><i class="fa fa-plus"></i> Add New Item</button>
+  </p>
+</div>
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
+
+  
+      <script id="rendered-js" type="module">
+import { createApp } from "https://cdn.skypack.dev/petite-vue@0.2.3";
+
+createApp({
+  entries: [
+  {
+    name: 'Item-1',
+    quantity: 0,
+    price: 12,
+    total: 0,
+    edit: false },
+
+  { name: 'Item-2', quantity: 0, price: 7.5, total: 0, edit: false },
+  { name: 'Item-3', quantity: 0, price: 50, total: 0, edit: false },
+  { name: 'Item-4', quantity: 0, price: 9.6, total: 0, edit: false }],
+
+  createEntry() {
+    this.entries.push({
+      name: '',
+      quantity: 0,
+      price: 0,
+      total: 0.00,
+      edit: true });
+
+  },
+  removeEntry(index) {
+    this.entries.splice(index, 1);
+  },
+  subtotal: 0,
+  tax: 0.00,
+  totalTax: 0,
+  totalPrice: 0 }).
+mount();
+//# sourceURL=pen.js
+    </script>
+
+  
+
+</body>
+
+</html>
